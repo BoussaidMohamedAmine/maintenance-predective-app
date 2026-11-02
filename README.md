@@ -4,6 +4,8 @@
 applique **les mêmes prétraitements** que les notebooks et affiche la prédiction avec une interprétation :
 durée de vie restante (RUL), alerte de remplacement, mode de défaillance et indicateur de santé.
 
+**Application en ligne :** https://maintenance-predective-appgit-wh8cemq3nvahzmdjxvy8sq.streamlit.app/
+
 ## Structure du dépôt
 
 ```
