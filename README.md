@@ -1,16 +1,24 @@
-# Démonstration interactive — Étude de cas 5, Groupe 04
+# Maintenance prédictive des pompes — démonstration Streamlit
 
-Application Streamlit qui charge les **modèles sauvegardés** des quatre notebooks (`models/*.keras`),
-applique **les mêmes prétraitements** que les notebooks et affiche la prédiction avec une interprétation.
+Étude de cas 5, Groupe 04. Application Streamlit qui charge les **modèles sauvegardés** des quatre jalons (`models/*.keras`),
+applique **les mêmes prétraitements** que les notebooks et affiche la prédiction avec une interprétation :
+durée de vie restante (RUL), alerte de remplacement, mode de défaillance et indicateur de santé.
 
-## Contenu
+## Structure du dépôt
 
-| Fichier | Rôle |
-|---|---|
-| `app.py` | interface Streamlit : choix du jalon, de l'entrée, du cycle observé ; prédiction et interprétation |
-| `demo_core.py` | chargement des modèles et prétraitements (fonctions reprises des notebooks) |
-| `verifier_modeles.py` | recalcule les résultats de test de chaque modèle et les compare aux notebooks |
-| `exemples/` | historiques de pompes de test à importer : `pompe_A201`, `pompe_A205` (type A), `pompe_B606` (type B) — capteurs `.csv` et spectrogrammes `.npy` |
+```
+├── app/
+│   ├── app.py               interface Streamlit (point d'entrée)
+│   ├── demo_core.py         chargement des modèles et prétraitements (fonctions reprises des notebooks)
+│   ├── verifier_modeles.py  recalcule les résultats de test de chaque modèle
+│   └── exemples/            pompes de test à importer : A201, A205 (type A), B606 (type B), .csv + .npy
+├── data/                    uc5_flotteA.npz, uc5_flotteB.npz (données simulées)
+├── models/                  modèles entraînés (.keras)
+└── requirements.txt
+```
+
+`data/` sert à calculer les statistiques de normalisation (cycles sains du train, comme dans les notebooks) et fournit
+les pompes de test proposées dans l'application.
 
 ## Modèles utilisés
 
@@ -24,16 +32,25 @@ applique **les mêmes prétraitements** que les notebooks et affiche la prédict
 Prétraitements communs : capteurs centrés-réduits par régime de charge avec les cycles sains (RUL > 150) du train
 (du type B pour les modèles B), spectrogramme / 255, sortie × 125. Une pompe est signalée si la RUL prédite est < 30.
 
-## Lancement
+## Lancement local
 
-Prérequis : l'environnement des notebooks (Python 3.11, TensorFlow 2.21, Keras 3.15, pandas, matplotlib) et `streamlit`
-(`pip install streamlit`). Les données doivent être dans `UC5/data/` et les modèles dans `UC5/models/`.
+Python 3.11 recommandé.
 
 ```bash
-cd app
-python verifier_modeles.py      # facultatif : contrôle que les modèles redonnent les résultats de test
-streamlit run app.py            # ouvre http://localhost:8501
+pip install -r requirements.txt
+streamlit run app/app.py           # ouvre http://localhost:8501
+python app/verifier_modeles.py     # facultatif : contrôle des résultats de test
 ```
+
+## Déploiement sur Streamlit Community Cloud
+
+1. Pousser ce dépôt sur GitHub (dépôt public, ou privé relié à votre compte Streamlit).
+2. Sur [share.streamlit.io](https://share.streamlit.io) : **Create app** → choisir le dépôt, la branche `main`
+   et **Main file path : `app/app.py`**.
+3. Dans **Advanced settings**, choisir **Python 3.11**, puis **Deploy**.
+
+Les dépendances sont installées depuis `requirements.txt` (racine du dépôt). Le premier démarrage prend quelques
+minutes (installation de TensorFlow, puis chargement des données et des modèles, mis en cache ensuite).
 
 ## Utilisation
 
@@ -54,5 +71,5 @@ streamlit run app.py            # ouvre http://localhost:8501
 | J3 type A (multitâche λ = 0) | 24,57 | 2 371 | 0,818 | 0,00 | — |
 | J4 GRU W = 60, masquage | 23,79 | 1 452 | 0,818 | 0,00 | — |
 
-Identiques aux résultats de test des notebooks. Note : le backend Keras de l'application est TensorFlow ; les modèles des
+Identiques aux résultats de test des notebooks. Le backend Keras de l'application est TensorFlow ; les modèles des
 jalons 1 à 3 ont été entraînés avec le backend PyTorch, le format `.keras` est indépendant du backend.

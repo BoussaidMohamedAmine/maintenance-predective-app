@@ -1,5 +1,5 @@
 """Vérifie que les modèles sauvegardés, avec les prétraitements de demo_core, redonnent les résultats de test des notebooks.
-Lancement : python verifier_modeles.py (depuis le dossier app)."""
+Lancement : python app/verifier_modeles.py (depuis la racine du dépôt)."""
 import numpy as np
 from demo_core import Demo, RUL_MAX, SEUIL, ZONE_MODE, NOMS, score_nasa
 

@@ -1,5 +1,5 @@
 """Démonstration interactive, Étude de cas 5, Groupe 04 : modèles retenus des quatre jalons.
-Lancement : streamlit run app.py (depuis le dossier app)."""
+Lancement : streamlit run app/app.py (depuis la racine du dépôt)."""
 import io
 import numpy as np, pandas as pd
 import matplotlib.pyplot as plt
